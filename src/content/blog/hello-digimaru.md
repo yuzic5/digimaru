@@ -2,7 +2,7 @@
 title: 'デジタル丸鋸。digimaru始動'
 description: 'なぜコンピューターエンジニアが丸鋸を手に取り、ブログを始めたのか'
 pubDate: '2026-01-01'
-heroImage: '/blog-placeholder-about.svg'
+heroImage: './blog-placeholder-about.svg'
 ---
 
 ### プロフィール

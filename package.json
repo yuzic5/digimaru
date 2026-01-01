@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "clean": "rm -rf .astro dist && npx astro sync && npm run dev"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.13",

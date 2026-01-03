@@ -14,7 +14,8 @@ export default defineConfig({
         partytown({
             // config を追加し、GA4 のデータレイヤーを Web ワーカーへ転送するように設定します
             config: {
-                forward: ["dataLayer.push"],
+                // clarity を追加して、Webワーカー側へ転送できるようにします
+                forward: ["dataLayer.push", "clarity"],
             },
         }),
     ],

@@ -1,24 +1,38 @@
 ---
+// src/components/HeaderLink.astro
 import type { HTMLAttributes } from 'astro/types';
 
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+
+// 1. 現在のパスを取得し、末尾の / を消して標準化（5S: 清掃）
+const { pathname } = Astro.url;
+const normalizedPathname = pathname.replace(/\/$/, '');
+const normalizedHref = (typeof href === 'string' ? href : '').replace(/\/$/, '');
+
+// 現在の言語を取得（/ja または /en）
+const lang = pathname.startsWith('/en') ? '/en' : '/ja';
+
+const isActive = 
+  normalizedPathname === normalizedHref || // 1. 完全に一致している場合
+  (
+    normalizedHref !== lang && // 2. かつ、リンク先が「言語のトップ(/ja, /en)」ではない場合
+    normalizedPathname.startsWith(normalizedHref) // 3. 且つ、そのパスで始まっている場合
+  );
 ---
 
 <a href={href} class:list={[className, { active: isActive }]} {...props}>
-	<slot />
+    <slot />
 </a>
+
 <style>
-	a {
-		display: inline-block;
-		text-decoration: none;
-	}
-	a.active {
-		font-weight: bolder;
-		text-decoration: underline;
-	}
+    a {
+        display: inline-block;
+        text-decoration: none;
+    }
+    a.active {
+        font-weight: bolder;
+        text-decoration: underline;
+    }
 </style>

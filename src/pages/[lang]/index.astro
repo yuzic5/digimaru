@@ -1,0 +1,100 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+// 1. 言語パターンを定義
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'ja' } },
+    { params: { lang: 'en' } },
+  ];
+}
+
+const { lang } = Astro.params;
+
+// 2. 言語ごとの固定テキストを用意（整頓）
+const t = {
+  ja: {
+    heroTitle: "Astroを使ってブログを作ってみる",
+    heroDesc: `生成AIさんによりWeb検索が不要になりつつある今日この頃ではあるが、<br>
+				そんな時代でもWeb上に情報発信していないという事は、<br>
+				インターネットの世界では存在していないのと同義ではないか？<br>
+				<br>
+				自分が存在するため、<br>
+				あわよくば、お世話になっているインターネットにも還元するため、<br>
+				今更ながらブログをいうものを作ってみる。<br>
+				<br>
+				SNSの方が効果がありそうだが、<br>
+				ソフトウェアエンジニアの端くれとして、<br>
+				独自にホストしたWebページから情報発信してみたい、<br>
+				でもお金はかけたくない、というノリで、<br>
+				体調を崩した2026年元旦より作ってみた。<br>
+				<br>
+				今後どのような方向へ進んでいくかは未知数。<br>
+				何かを誇示するでもなく、思うがままに、ふらふらと。`,
+    latestTitle: "最近の記事",
+    viewAll: "全ての記事を見る →"
+  },
+  en: {
+    heroTitle: "Hiroshima Dev Memo",
+    heroDesc: "A digital brain dump of a software engineer working in Hiroshima. Documenting trials and errors in Manufacturing, IT, and Disaster Prevention, along with insights from AWS, Python, and HBMS.",
+    latestTitle: "Latest Memos",
+    viewAll: "View All Posts →"
+  }
+};
+
+const content = lang === 'en' ? t.en : t.ja;
+
+// 3. 記事データの取得（現在の言語にフィルタリング）
+const allPosts = await getCollection('blog');
+const latestPosts = allPosts
+  .filter(post => post.data.lang === lang)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			main { width: 720px; max-width: calc(100% - 2em); margin: auto; padding: 2em 1em; }
+			.hero-section { margin-bottom: 3rem; border-bottom: 1px solid #eee; padding-bottom: 2rem; }
+			.memo-list { list-style-type: none; padding: 0; }
+			.memo-item { margin-bottom: 1.5rem; }
+			.memo-item a { text-decoration: none; color: #333; display: flex; flex-direction: column; }
+			.memo-item .date { font-size: 0.8rem; color: #666; }
+			.memo-item .title { font-size: 1.2rem; font-weight: bold; margin: 0.2rem 0; }
+			.view-all { display: inline-block; margin-top: 1rem; color: var(--accent); font-weight: bold; }
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="hero-section">
+				<h1>{content.heroTitle}</h1>
+				<p>{content.heroDesc}</p>
+			</section>
+
+			<section>
+				<h2>Latest Articles</h2>
+				<ul class="memo-list">
+					{latestPosts.map((post) => (
+						<li class="memo-item">
+							<a href={`/${post.data.lang}/blog/${post.data.slug}/`}>
+								<span class="date"><FormattedDate date={post.data.pubDate} /></span>
+								<span class="title">{post.data.title}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+				<a href={`/${lang}/blog/`} class="view-all">{content.viewAll}</a>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

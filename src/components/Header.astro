@@ -3,14 +3,19 @@
 import HeaderLink from './HeaderLink.astro';
 import { SITE_TITLE } from '../consts';
 import LanguagePicker from './LanguagePicker.astro';
+
+// 現在のURLパスを取得
+const { pathname } = Astro.url;
+// パスが /en で始まっていれば 'en'、そうでなければ 'ja' と判定
+const lang = pathname.startsWith('/en') ? 'en' : 'ja';
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href={`/${lang}/`}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">Home</HeaderLink>
-			<HeaderLink href="/blog">Blog</HeaderLink>
+			<HeaderLink href={`/${lang}/`}>Home</HeaderLink>
+			<HeaderLink href={`/${lang}/blog`}>Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
 		<LanguagePicker />

@@ -1,6 +1,8 @@
 ---
-import { SITE_TITLE } from '../consts';
+// src/components/Header.astro
 import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from '../consts';
+import LanguagePicker from './LanguagePicker.astro';
 ---
 
 <header>
@@ -11,6 +13,7 @@ import HeaderLink from './HeaderLink.astro';
 			<HeaderLink href="/blog">Blog</HeaderLink>
 			<HeaderLink href="/about">About</HeaderLink>
 		</div>
+		<LanguagePicker />
 		<div class="social-links">
 			<a href="https://m.webtoo.ls/@astro" target="_blank">
 				<span class="sr-only">Follow Astro on Mastodon</span>

@@ -1,0 +1,51 @@
+---
+// src/components/LanguagePicker.astro
+const { lang } = Astro.params;
+const { pathname } = Astro.url;
+
+// 現在のURLから言語部分（/ja/ や /en/）を入れ替える関数
+const getTranslatedPath = (targetLang: string) => {
+  const segments = pathname.split('/').filter(Boolean);
+  // 最初のセグメントが言語コード（ja/en）であることを想定
+  if (segments[0] === 'ja' || segments[0] === 'en') {
+    segments[0] = targetLang;
+  } else {
+    // もし言語コードがないパス（/）なら、言語を追加
+    segments.unshift(targetLang);
+  }
+  return `/${segments.join('/')}/`;
+};
+---
+
+<div class="lang-picker">
+  <a href={getTranslatedPath('ja')} class={lang === 'ja' ? 'active' : ''}>JP</a>
+  <span>|</span>
+  <a href={getTranslatedPath('en')} class={lang === 'en' ? 'active' : ''}>EN</a>
+</div>
+
+<style>
+  .lang-picker {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .lang-picker a {
+    text-decoration: none;
+    color: var(--gray);
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .lang-picker a:hover {
+    background-color: #eee;
+  }
+  .lang-picker a.active {
+    color: var(--accent); /* テーマカラーを適用 */
+    background-color: rgba(var(--accent-rgb), 0.1);
+  }
+  span {
+    color: #ccc;
+  }
+</style>

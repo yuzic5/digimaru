@@ -84,7 +84,6 @@ const htmlContent = documentToHtmlString(post.data.body);
                         <FormattedDate date={post.data.pubDate} />
                     </div>
                     <h1>{post.data.title}</h1>
-                    <div>言語設定: {lang}</div>
                     <hr />
                 </div>
                 <div class="content" set:html={htmlContent} />
